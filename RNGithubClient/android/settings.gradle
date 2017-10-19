@@ -1,0 +1,3 @@
+rootProject.name = 'RNGithubClient'
+
+include ':app'
