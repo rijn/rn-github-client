@@ -22,6 +22,8 @@ class MeScreen extends React.Component {
   }
 
   render() {
+    if (!this.props.userInfo) return (<View></View>);
+
     let { userInfo: { error, loading }, dispatch } = this.props;
 
     if (error) {
@@ -29,7 +31,6 @@ class MeScreen extends React.Component {
     } else if (loading) {
       return <Text>Loading</Text>;
     } else {
-      console.log(this.props);
       let { userInfo: { user: { login, avatarUrl, name, bio, company } } } = this.props;
 
       return (

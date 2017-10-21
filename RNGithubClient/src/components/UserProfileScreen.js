@@ -31,8 +31,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     height: 100,
-    borderBottomWidth: 0.5,
     borderColor: '#c9c9c9'
+  },
+  ceilBottom: {
+    borderBottomWidth: 0.5
   },
   ceilLeft: {
     borderRightWidth: 0.5
@@ -143,11 +145,11 @@ class UserProfileScreen extends React.Component {
               </Separator>
               <Grid onPress={() => dispatch({ type: 'UserRSFF', params: { user } })}>
                 <Row>
-                  <Col style={[ styles.ceil, styles.ceilLeft ]}>
+                  <Col style={[ styles.ceil, styles.ceilLeft, styles.ceilBottom ]}>
                     <Text note>Repos</Text>
                     <Text>{user.repositories.totalCount}</Text>
                   </Col>
-                  <Col style={styles.ceil}>
+                  <Col style={[ styles.ceil, styles.ceilBottom ]}>
                     <Text note>Starred</Text>
                     <Text>{user.starredRepositories.totalCount}</Text>
                   </Col>

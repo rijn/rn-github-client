@@ -10,7 +10,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import gql from 'graphql-tag';
 
-const TOKEN = 'e17862053e9dff5e41a86e7fbba38334e47fb8bc';
+const TOKEN = '143984ae1791112bf3ecd8ab0288eadfc80f7e01';
 
 const networkInterface = createNetworkInterface({ uri: 'https://api.github.com/graphql' });
 const client = new ApolloClient({ networkInterface });
@@ -26,8 +26,6 @@ networkInterface.use([{
     next();
   }
 }]);
-
-console.log(networkInterface);
 
 export default class App extends React.Component {
   store = createStore(combineReducers({

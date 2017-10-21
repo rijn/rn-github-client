@@ -11,6 +11,8 @@ import SettingScreen from '../components/SettingScreen';
 import LoginScreen from '../components/LoginScreen';
 import UserProfileScreen from '../components/UserProfileScreen';
 import UserRSFFScreen from '../components/UserRSFFScreen';
+import RepositoryProfileScreen from '../components/RepositoryProfileScreen';
+import WebView from '../components/WebView';
 
 const iconSize = 26;
 
@@ -72,7 +74,9 @@ export const AppNavigator = StackNavigator({
   },
   Login: { screen: LoginScreen, navigationOptions: { header: null } },
   UserProfile: { screen: UserProfileScreen },
-  UserRSFF: { screen: UserRSFFScreen }
+  RepositoryProfile: { screen: RepositoryProfileScreen },
+  UserRSFF: { screen: UserRSFFScreen },
+  WebView: { screen: WebView }
 }, {
   'header': null
 });

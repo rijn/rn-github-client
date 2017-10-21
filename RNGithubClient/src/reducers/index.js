@@ -15,15 +15,13 @@ export const nav = (state = initialNavState, action) => {
       let nextAction = AppNavigator.router.getActionForPathAndParams('Root');
       nextState = AppNavigator.router.getStateForAction(action);
       break;
+    case 'Logout':
     case 'UserProfile':
-      nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'UserProfile', params: action.params }),
-        state
-      );
-      break;
+    case 'RepositoryProfile':
     case 'UserRSFF':
+    case 'WebView':
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'UserRSFF', params: action.params }),
+        NavigationActions.navigate({ routeName: action.type, params: action.params }),
         state
       );
       break;
@@ -43,6 +41,9 @@ export const auth = (state = initialAuthState, action) => {
       let user = action.params.user;
       AsyncStorage.setItem('@githubClient:user', user);
       return { ...state, isLoggedIn: true, user };
+    case 'Logout':
+      AsyncStorage.removeItem('@githubClient:user');
+      return { ...state, isLoggedIn: false, user: {} };
     default:
       return state;
   }

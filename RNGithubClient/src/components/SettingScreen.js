@@ -18,6 +18,8 @@ class SettingScreen extends React.Component {
   }
 
   render() {
+    let { dispatch } = this.props;
+
     return (
       <Container>
         <Content>
@@ -25,7 +27,7 @@ class SettingScreen extends React.Component {
             <Separator bordered>
               <Text>Account</Text>
             </Separator>
-            <ListItem last>
+            <ListItem last onPress={() => { dispatch({ type: 'Logout' }); }}>
               <Text style={{ color: '#f00' }}>Log out</Text>
             </ListItem>
           </View>

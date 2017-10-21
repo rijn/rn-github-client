@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text } from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,10 +12,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const FeedScreen = () => (
-  <View style={styles.container}>
-    <Text>Main</Text>
-  </View>
-);
+class FeedScreen extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default FeedScreen;
+    this.state = {};
+  }
+
+  render() {
+    let { dispatch } = this.props;
+
+    return (
+      <View style={styles.container}>
+        <Text>Main</Text>
+      </View>
+    );
+  }
+};
+
+export default connect()(FeedScreen);

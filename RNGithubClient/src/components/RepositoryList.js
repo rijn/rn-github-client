@@ -85,11 +85,12 @@ class RepositoryList extends React.Component {
               parent,
               primaryLanguage,
               updatedAt,
+              owner: { login: owner },
               stargazers: { totalCount: stars },
               forks: { totalCount: forks }
             }
           }) => (
-            <ListItem onPress={() => dispatch({ type: 'RepositoryProfile', params: { user: { login } } })}>
+            <ListItem onPress={() => dispatch({ type: 'RepositoryProfile', params: { repository: { name, owner } } })}>
               <View>
                 <View style={styles.inline}>
                   <Text>{name}</Text>
@@ -137,6 +138,9 @@ const GetReposQuery = gql`
             description
             updatedAt
             isFork
+            owner {
+              login
+            }
             parent {
               nameWithOwner
             }
@@ -177,6 +181,9 @@ const GetStarredReposQuery = gql`
             description
             updatedAt
             isFork
+            owner {
+              login
+            }
             parent {
               nameWithOwner
             }
@@ -221,7 +228,7 @@ const withRepos = graphql(GetReposQuery, {
       return { loading: true, fetchNextPage: () => {} };
     }
 
-    if (data.error) {
+    if (data.error || !data.user) {
       console.log(data.error);
     }
 
