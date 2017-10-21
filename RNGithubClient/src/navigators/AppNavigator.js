@@ -10,6 +10,7 @@ import SettingScreen from '../components/SettingScreen';
 
 import LoginScreen from '../components/LoginScreen';
 import UserProfileScreen from '../components/UserProfileScreen';
+import UserRSFFScreen from '../components/UserRSFFScreen';
 
 const iconSize = 26;
 
@@ -69,8 +70,11 @@ export const AppNavigator = StackNavigator({
   Root: {
     screen: TabNav,
   },
-  Login: { screen: LoginScreen },
-  UserProfile: { screen: UserProfileScreen }
+  Login: { screen: LoginScreen, navigationOptions: { header: null } },
+  UserProfile: { screen: UserProfileScreen },
+  UserRSFF: { screen: UserRSFFScreen }
+}, {
+  'header': null
 });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (

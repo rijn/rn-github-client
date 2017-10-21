@@ -1,36 +1,80 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, AsyncStorage } from 'react-native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { Container, Header, Body, Title, Content, Form, Label, Item, Button, Input, Text } from 'native-base';
 
 const styles = StyleSheet.create({
-  container: {
+  logoContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    paddingTop: 100
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  form: {
+    paddingBottom: 10
   },
+  button: {
+    margin: 10
+  }
 });
 
-const LoginScreen = ({ navigation }) => (
-  <View style={styles.container}>
-    <Button
-      onPress={() => navigation.dispatch({ type: 'Login' })}
-      title="Log in"
-    />
-  </View>
-);
+const LoginScreen = class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.navigation = props.navigation;
+
+    this.checkLocalStorage();
+
+    this.state = {
+      user: null
+    };
+  }
+
+  login() {
+    this.navigation.dispatch({ type: 'Login', params: { user: this.state.user } });
+  }
+
+  checkLocalStorage() {
+    AsyncStorage.getItem('@githubClient:user').then((user) => {
+      if (user){
+        this.setState({ user });
+        this.login();
+      }
+    });
+  }
+
+  render() {
+    return (
+      <Container>
+        <Header>
+          <Body>
+            <Title>Login</Title>
+          </Body>
+        </Header>
+        <Content>
+          <View style={styles.logoContainer}>
+            <Entypo name='github' size={100} />
+          </View>
+          <Form style={styles.form}>
+            <Item floatingLabel last>
+              <Label>Username</Label>
+              <Input onChangeText={(t) => this.setState({ user: t })}/>
+            </Item>
+          </Form>
+          <Button block style={styles.button}
+            onPress={() => this.login()}>
+            <Text>GO</Text>
+          </Button>
+        </Content>
+      </Container>
+    );
+  }
+};
 
 LoginScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-};
-
-LoginScreen.navigationOptions = {
-  title: 'Log In',
 };
 
 export default LoginScreen;
