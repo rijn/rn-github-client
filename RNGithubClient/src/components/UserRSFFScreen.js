@@ -15,12 +15,9 @@ import RepositoryList from './RepositoryList';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const { height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    height: height - 64
+    backgroundColor: '#f8f8f8'
   }
 });
 
@@ -47,6 +44,7 @@ class UserRSFFScreen extends React.Component {
               <RepositoryList user={login} enableRepos />
             </Tab>
             <Tab heading={'Starred'}>
+              <RepositoryList user={login} enableStarredRepos />
             </Tab>
             <Tab heading={'Followers'}>
               <UserList user={login} enableFollowers />

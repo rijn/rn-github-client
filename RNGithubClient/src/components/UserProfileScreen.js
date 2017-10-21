@@ -103,6 +103,19 @@ class UserProfileScreen extends React.Component {
         );
       }).value();
 
+      let Organization = _.chain(user.organizations.nodes).map(({ id, name, avatarUrl }, key) => (
+        <ListItem icon last={key == user.organizations.nodes.length - 1} key={id}>
+          <Left>
+            <Thumbnail small source={{ uri: avatarUrl }} />
+          </Left>
+          <Body>
+            <Text>{name}</Text>
+          </Body>
+          <Right>
+          </Right>
+        </ListItem>
+      )).value();
+
       return (
         <Container>
           <Content>
@@ -151,6 +164,12 @@ class UserProfileScreen extends React.Component {
                 </Row>
               </Grid>
             </View>
+            {user.organizations.nodes.length !== 0 && <View style={styles.container}>
+              <Separator bordered>
+                <Text>Organization</Text>
+              </Separator>
+              {Organization}
+            </View>}
           </Content>
         </Container>
       );
@@ -188,6 +207,13 @@ const GetUserProfileQuery = gql`
       }
       starredRepositories {
         totalCount
+      }
+      organizations(first: 100) {
+        nodes {
+          id
+          name
+          avatarUrl
+        }
       }
     }
   }

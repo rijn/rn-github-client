@@ -10,7 +10,7 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import gql from 'graphql-tag';
 
-const TOKEN = 'eec293b7baaf6d4c6f8459347338ed567f07c1fd';
+const TOKEN = 'e17862053e9dff5e41a86e7fbba38334e47fb8bc';
 
 const networkInterface = createNetworkInterface({ uri: 'https://api.github.com/graphql' });
 const client = new ApolloClient({ networkInterface });
@@ -22,6 +22,7 @@ networkInterface.use([{
     }
 
     req.options.headers.authorization = `Bearer ${TOKEN}`;
+
     next();
   }
 }]);

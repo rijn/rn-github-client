@@ -38,7 +38,7 @@ class RepositoryList extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.loading) return;
 
-    let composed = newProps.repos ? newProps.repos : null;
+    let composed = newProps.repos ? newProps.repos : newProps.starredRepos ? newProps.starredRepos : null;
 
     this.setState({ composed });
 
@@ -95,9 +95,9 @@ class RepositoryList extends React.Component {
                   <Text>{name}</Text>
                   {isFork && <Text note>{parent.nameWithOwner}</Text>}
                 </View>
-                <View style={[ styles.inline, { marginTop: 5 } ]}>
+                {description && <View style={[ styles.inline, { marginTop: 5 } ]}>
                   <Text note>{description}</Text>
-                </View>
+                </View>}
                 <View style={[ styles.inline, { marginTop: 5 } ]}>
                   {this.primaryLanguageView(primaryLanguage)}
                   <View style={[ styles.inline, styles.ceil ]}>
@@ -121,13 +121,54 @@ class RepositoryList extends React.Component {
 
 RepositoryList.propTypes = {
   user: PropTypes.string.isRequired,
-  enableRepos: PropTypes.bool.isRequired
+  enableRepos: PropTypes.bool,
+  enableStarredRepos: PropTypes.bool
 };
 
 const GetReposQuery = gql`
   query GetRepos($login: String!, $after: String) {
     user(login: $login) {
       repositories(first: 10, after: $after) {
+        edges {
+          node {
+            id
+            name
+            nameWithOwner
+            description
+            updatedAt
+            isFork
+            parent {
+              nameWithOwner
+            }
+            stargazers {
+              totalCount
+            }
+            forks {
+              totalCount
+            }
+            primaryLanguage {
+              color
+              name
+            }
+            licenseInfo {
+              nickname
+              name
+            }
+          }
+          cursor
+        }
+        pageInfo {
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+const GetStarredReposQuery = gql`
+  query GetStarredRepos($login: String!, $after: String) {
+    user(login: $login) {
+      starredRepositories(first: 10, after: $after) {
         edges {
           node {
             id
@@ -214,4 +255,54 @@ const withRepos = graphql(GetReposQuery, {
   }
 });
 
-export default connect()(withRepos(RepositoryList));
+const withStarredRepos = graphql(GetStarredReposQuery, {
+  name: 'starredRepos',
+  skip: ({ enableStarredRepos }) => !enableStarredRepos,
+  options: (props) => ({
+    variables: {
+      login: props.user
+    },
+    notifyOnNetworkStatusChange: true
+  }),
+  props: ({ starredRepos, ownProps }) => {
+    let data = starredRepos;
+
+    if (data.loading) {
+      return { loading: true, fetchNextPage: () => {} };
+    }
+
+    if (data.error) {
+      console.log(data.error);
+    }
+
+    const fetchNextPage = () => {
+      return data.fetchMore({
+        variables: {
+          after: _.last(data.user.starredRepositories.edges).cursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          return Object.assign({}, previousResult, {
+            user: {
+              __typename: previousResult.user.__typename,
+              starredRepositories: {
+                __typename: previousResult.user.starredRepositories.__typename,
+                edges: [ ...previousResult.user.starredRepositories.edges, ...fetchMoreResult.user.starredRepositories.edges ],
+                pageInfo: fetchMoreResult.user.starredRepositories.pageInfo,
+              }
+            }
+          });
+        }
+      });
+    };
+
+    return {
+      repos: {
+        repository: data.user.starredRepositories,
+        hasNextPage: data.user.starredRepositories.pageInfo.hasNextPage,
+        fetchNextPage
+      }
+    };
+  }
+});
+
+export default connect()(withStarredRepos(withRepos(RepositoryList)));

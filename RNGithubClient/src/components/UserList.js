@@ -8,12 +8,9 @@ import { Container, Content, Separator, List, ListItem, Text, Left, Body, Right,
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const { height } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    height: height - 64 - 50
+    backgroundColor: '#fff'
   }
 });
 
