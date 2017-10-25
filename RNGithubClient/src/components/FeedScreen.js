@@ -12,6 +12,13 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Class for feed screen.
+ *
+ * @desc All user activities
+ *
+ * @class FeedScreen
+ */
 class FeedScreen extends React.Component {
   constructor(props) {
     super(props);

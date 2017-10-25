@@ -10,6 +10,10 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * Setting Screen
+ * @class SettingScreen
+ */
 class SettingScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -17,6 +21,10 @@ class SettingScreen extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     let { dispatch } = this.props;
 

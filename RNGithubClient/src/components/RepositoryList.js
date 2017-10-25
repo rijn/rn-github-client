@@ -26,6 +26,11 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * List of repositories screen
+ *
+ * @class RepositoryList
+ */
 class RepositoryList extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +40,11 @@ class RepositoryList extends React.Component {
     };
   }
 
+  /**
+   * Receive new props and calculate and concat the list
+   *
+   * @param  {Props} newProps
+   */
   componentWillReceiveProps(newProps) {
     if (newProps.loading) return;
 
@@ -45,6 +55,12 @@ class RepositoryList extends React.Component {
     this.props = newProps;
   }
 
+  /**
+   * Primary language of repo component
+   *
+   * @param  {Object} primaryLanguage
+   * @return {ReactDOM}
+   */
   primaryLanguageView(primaryLanguage) {
     if (!primaryLanguage) return;
     let { name: primaryLanguageName, color: primaryLanguageColor } = primaryLanguage;
@@ -60,6 +76,11 @@ class RepositoryList extends React.Component {
     );
   }
 
+  /**
+   * Render function
+   *
+   * @return {ReactDOM}
+   */
   render() {
     let { dispatch } = this.props;
 
@@ -120,12 +141,19 @@ class RepositoryList extends React.Component {
   }
 };
 
+/**
+ * Prop Types
+ * Required user and switches to control the data source
+ */
 RepositoryList.propTypes = {
   user: PropTypes.string.isRequired,
   enableRepos: PropTypes.bool,
   enableStarredRepos: PropTypes.bool
 };
 
+/**
+ * Get Repo List Query
+ */
 const GetReposQuery = gql`
   query GetRepos($login: String!, $after: String) {
     user(login: $login) {
@@ -169,6 +197,9 @@ const GetReposQuery = gql`
   }
 `;
 
+/**
+ * Get starred repo query
+ */
 const GetStarredReposQuery = gql`
   query GetStarredRepos($login: String!, $after: String) {
     user(login: $login) {
@@ -212,6 +243,12 @@ const GetStarredReposQuery = gql`
   }
 `;
 
+/**
+ * Apollo Container
+ *
+ * Will fetch data from server, and return a function which can fetch the next page of data and can
+ * be called by the component.
+ */
 const withRepos = graphql(GetReposQuery, {
   name: 'repos',
   skip: ({ enableRepos }) => !enableRepos,
@@ -262,6 +299,10 @@ const withRepos = graphql(GetReposQuery, {
   }
 });
 
+/**
+ * Apollo container
+ * Same as previous container
+ */
 const withStarredRepos = graphql(GetStarredReposQuery, {
   name: 'starredRepos',
   skip: ({ enableStarredRepos }) => !enableStarredRepos,

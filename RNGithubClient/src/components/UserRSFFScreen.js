@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * User Repo/Starred/Follower/Following screen
+ * @class UserRSFFScreen
+ * @desc Will hold a tab container which contains list components
+ */
 class UserRSFFScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -28,10 +33,17 @@ class UserRSFFScreen extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Set header based on navigation state
+   */
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.user.login} List`,
   });
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     let { dispatch } = this.props;
     let login = this.props.navigation.state.params.user.login;

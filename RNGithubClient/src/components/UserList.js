@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * User List Component
+ * @class UserList
+ */
 class UserList extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +27,10 @@ class UserList extends React.Component {
     };
   }
 
+  /**
+   * Receive new props and calculate and concat list
+   * @param  {Prop} newProps
+   */
   componentWillReceiveProps(newProps) {
     if (newProps.loading) return;
 
@@ -39,6 +47,10 @@ class UserList extends React.Component {
     this.props = newProps;
   }
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     let { dispatch } = this.props;
 
@@ -78,17 +90,19 @@ class UserList extends React.Component {
   }
 };
 
-UserList.defaultProps = {
-  enableFollowers: true,
-  enableFollowing: false
-}
-
+/**
+ * Prop Type
+ * Required user and bool to indicate the data source
+ */
 UserList.propTypes = {
   user: PropTypes.string.isRequired,
   enableFollowers: PropTypes.bool.isRequired,
   enableFollowing: PropTypes.bool.isRequired
 };
 
+/**
+ * Get followers query
+ */
 const GetFollowersQuery = gql`
   query GetFollowers($login: String!, $after: String) {
     user(login: $login) {
@@ -111,6 +125,9 @@ const GetFollowersQuery = gql`
   }
 `;
 
+/**
+ * Get following query
+ */
 const GetFollowingQuery = gql`
   query GetFollowing($login: String!, $after: String) {
     user(login: $login) {
@@ -133,6 +150,11 @@ const GetFollowingQuery = gql`
   }
 `;
 
+/**
+ * Apollo container
+ * Will fetch data from data source and return a function which can pull the next page data that
+ * can be used in the component.
+ */
 const withFollowers = graphql(GetFollowersQuery, {
   name: 'followers',
   skip: ({ enableFollowers }) => !enableFollowers,
@@ -183,6 +205,10 @@ const withFollowers = graphql(GetFollowersQuery, {
   }
 });
 
+/**
+ * Apollo container
+ * Same as the previous one
+ */
 const withFollowing = graphql(GetFollowingQuery, {
   name: 'following',
   skip: ({ enableFollowing }) => !enableFollowing,

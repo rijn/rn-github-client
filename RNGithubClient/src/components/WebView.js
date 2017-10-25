@@ -1,21 +1,11 @@
-import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { StyleSheet, View, WebView as _WebView } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  Container, Content, Separator, ListItem, Text, Left, Body, Right, Thumbnail,
-  Tab, Tabs, ScrollableTab, Icon
-} from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid'
+import { WebView as _WebView } from 'react-native';
 
-import UserList from './UserList';
-
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-
-
+/**
+ * Web view screen
+ * @class WebView
+ */
 class WebView extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +13,10 @@ class WebView extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     return (
       <_WebView

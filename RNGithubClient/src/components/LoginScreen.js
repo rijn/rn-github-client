@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * Class for login screen
+ *
+ * @class LoginScreen
+ * @desc  For typing name currently, will do oauth later.
+ */
 const LoginScreen = class extends React.Component {
   constructor(props) {
     super(props);
@@ -32,10 +38,16 @@ const LoginScreen = class extends React.Component {
     };
   }
 
+  /**
+   * Dispatch login status to redux
+   */
   login() {
     this.navigation.dispatch({ type: 'Login', params: { user: this.state.user } });
   }
 
+  /**
+   * Check local storage, if user have already logged in, pass automatically
+   */
   checkLocalStorage() {
     AsyncStorage.getItem('@githubClient:user').then((user) => {
       if (user){
@@ -45,6 +57,11 @@ const LoginScreen = class extends React.Component {
     });
   }
 
+  /**
+   * Render function
+   *
+   * @return ReactDOM
+   */
   render() {
     return (
       <Container>
@@ -73,6 +90,10 @@ const LoginScreen = class extends React.Component {
   }
 };
 
+/**
+ * Prop Types
+ * Need navigation from redux connector
+ */
 LoginScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
 };

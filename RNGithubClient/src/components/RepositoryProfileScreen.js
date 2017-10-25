@@ -51,6 +51,9 @@ const styles = StyleSheet.create({
 
 const iconSize = 20;
 
+/**
+ * Attributes and Icon map
+ */
 const attrMap = {
   createdAt: {
     displayName: 'Created',
@@ -66,6 +69,10 @@ const attrMap = {
   }
 };
 
+/**
+ * Repository profile screen
+ * @class RepositoryProfileScreen
+ */
 class RepositoryProfileScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -73,10 +80,18 @@ class RepositoryProfileScreen extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Set the header based on navigation state
+   */
   static navigationOptions = ({ navigation: { state: { params: { repository: { name, owner } } } } }) => ({
     title: `${owner}/${name}`,
   });
 
+  /**
+   * Primay language component
+   * @param  {Object} primaryLanguage
+   * @return {ReactDOM}
+   */
   primaryLanguageView(primaryLanguage) {
     if (!primaryLanguage) return;
     let { name: primaryLanguageName, color: primaryLanguageColor } = primaryLanguage;
@@ -92,6 +107,10 @@ class RepositoryProfileScreen extends React.Component {
     );
   }
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     let { repositoryProfile: { error, loading } } = this.props;
 
@@ -179,6 +198,10 @@ class RepositoryProfileScreen extends React.Component {
   }
 };
 
+/**
+ * Prop Types
+ * Required repository profile information
+ */
 RepositoryProfileScreen.propTypes = {
   repositoryProfile: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
@@ -186,6 +209,9 @@ RepositoryProfileScreen.propTypes = {
   }).isRequired
 };
 
+/**
+ * Get repository profile query
+ */
 const GetRepositoryProfileQuery = gql`
   query getRepositoryProfile($name: String!, $owner: String!) {
     repository(name: $name, owner: $owner) {
@@ -232,6 +258,9 @@ const GetRepositoryProfileQuery = gql`
   }
 `;
 
+/**
+ * Apollo Container
+ */
 const withInfo = graphql(GetRepositoryProfileQuery, {
   name: 'repositoryProfile',
   options: (props) => ({
@@ -240,6 +269,4 @@ const withInfo = graphql(GetRepositoryProfileQuery, {
   })
 });
 
-RepositoryProfileScreen = withInfo(RepositoryProfileScreen);
-
-export default connect()(RepositoryProfileScreen);
+export default connect()(withInfo(RepositoryProfileScreen));

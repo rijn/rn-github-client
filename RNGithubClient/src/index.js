@@ -10,11 +10,17 @@ import { graphql, ApolloProvider } from 'react-apollo';
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import gql from 'graphql-tag';
 
-const TOKEN = '143984ae1791112bf3ecd8ab0288eadfc80f7e01';
+/**
+ * Github Token
+ */
+const TOKEN = '';
 
 const networkInterface = createNetworkInterface({ uri: 'https://api.github.com/graphql' });
 const client = new ApolloClient({ networkInterface });
 
+/**
+ * Pass token when calling api
+ */
 networkInterface.use([{
   applyMiddleware(req, next) {
     if (!req.options.headers) {
@@ -27,7 +33,13 @@ networkInterface.use([{
   }
 }]);
 
+/**
+ * Main Application
+ */
 export default class App extends React.Component {
+  /**
+   * Combine reducer and initialize redux store
+   */
   store = createStore(combineReducers({
     ...AppReducer,
     apollo: client.reducer(),
@@ -37,6 +49,10 @@ export default class App extends React.Component {
       applyMiddleware(client.middleware())
   ));
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     return (
       <ApolloProvider client={client} store={this.store}>

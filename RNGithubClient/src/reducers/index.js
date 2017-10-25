@@ -4,10 +4,16 @@ import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator, TabNav } from '../navigators/AppNavigator';
 
+/**
+ * Set initial navigation to login page
+ */
 const initialNavState = AppNavigator.router.getStateForAction(
   AppNavigator.router.getActionForPathAndParams('Login')
 );
 
+/**
+ * Basic navigation reducer
+ */
 export const nav = (state = initialNavState, action) => {
   let nextState;
   switch (action.type) {
@@ -15,13 +21,18 @@ export const nav = (state = initialNavState, action) => {
       let nextAction = AppNavigator.router.getActionForPathAndParams('Root');
       nextState = AppNavigator.router.getStateForAction(action);
       break;
-    case 'Logout':
     case 'UserProfile':
     case 'RepositoryProfile':
     case 'UserRSFF':
     case 'WebView':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: action.type, params: action.params }),
+        state
+      );
+      break;
+    case 'Logout':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Login' }),
         state
       );
       break;
@@ -35,6 +46,10 @@ export const nav = (state = initialNavState, action) => {
 
 const initialAuthState = { isLoggedIn: false, user: null };
 
+/**
+ * Auth reducer
+ * Simply one user object currently, will do oauth later
+ */
 export const auth = (state = initialAuthState, action) => {
   switch (action.type) {
     case 'Login':
@@ -48,6 +63,8 @@ export const auth = (state = initialAuthState, action) => {
       return state;
   }
 }
+
+// Will be combined outside
 
 // const AppReducer = combineReducers({
 //   nav,

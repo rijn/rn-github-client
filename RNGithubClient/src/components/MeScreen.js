@@ -14,6 +14,12 @@ const styles = StyleSheet.create({
   }
 });
 
+/**
+ * Class for me screen.
+ *
+ * @class MeScreen
+ * @desc  My profile and my private repos
+ */
 class MeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +27,11 @@ class MeScreen extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Render function
+   *
+   * @return {ReactDOM}
+   */
   render() {
     if (!this.props.userInfo) return (<View></View>);
 
@@ -63,6 +74,11 @@ class MeScreen extends React.Component {
   }
 };
 
+/**
+ * Prop Types
+ *
+ * desc       To render MeScreen properly, we need the uui
+ */
 MeScreen.propTypes = {
   userInfo: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
@@ -70,6 +86,9 @@ MeScreen.propTypes = {
   }).isRequired
 };
 
+/**
+ * Query for getting user info
+ */
 const GetUserInfoQuery = gql`
   query getUserInfo($login: String!) {
     user(login: $login) {
@@ -83,6 +102,9 @@ const GetUserInfoQuery = gql`
   }
 `;
 
+/**
+ * Apollo container
+ */
 const withInfo = graphql(GetUserInfoQuery, {
   name: 'userInfo',
   skip: (ownProps) => !ownProps.isLoggedIn,
@@ -94,11 +116,12 @@ const withInfo = graphql(GetUserInfoQuery, {
   })
 });
 
-MeScreen = withInfo(MeScreen);
-
+/**
+ * State Props mapper
+ */
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user,
 });
 
-export default connect(mapStateToProps)(MeScreen);
+export default connect(mapStateToProps)(withInfo(MeScreen));

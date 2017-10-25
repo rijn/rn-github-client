@@ -16,6 +16,9 @@ import WebView from '../components/WebView';
 
 const iconSize = 26;
 
+/**
+ * Bottom tab navigator
+ */
 export const TabNav = TabNavigator({
   Feed: {
     screen: FeedScreen,
@@ -68,6 +71,9 @@ export const TabNav = TabNavigator({
   },
 });
 
+/**
+ * Stack navigator based on Tab navigator
+ */
 export const AppNavigator = StackNavigator({
   Root: {
     screen: TabNav,
@@ -81,6 +87,9 @@ export const AppNavigator = StackNavigator({
   'header': null
 });
 
+/**
+ * Container with navigation
+ */
 const AppWithNavigationState = ({ dispatch, nav }) => (
   <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
 );

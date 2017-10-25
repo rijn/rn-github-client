@@ -67,6 +67,10 @@ const attrMap = {
   }
 };
 
+/**
+ * User Profile Screen
+ * @class UserProfileScreen
+ */
 class UserProfileScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -74,10 +78,17 @@ class UserProfileScreen extends React.Component {
     this.state = {};
   }
 
+  /**
+   * Set header based on navigation state
+   */
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.user.login,
   });
 
+  /**
+   * Render function
+   * @return {ReactDOM}
+   */
   render() {
     let { userProfile: { error, loading } } = this.props;
 
@@ -179,6 +190,10 @@ class UserProfileScreen extends React.Component {
   }
 };
 
+/**
+ * Prop Types
+ * Require the user profile that will be rendered
+ */
 UserProfileScreen.propTypes = {
   userProfile: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
@@ -186,6 +201,9 @@ UserProfileScreen.propTypes = {
   }).isRequired
 };
 
+/**
+ * Get user profile query
+ */
 const GetUserProfileQuery = gql`
   query getUserProfile($login: String!) {
     user(login: $login) {
@@ -221,6 +239,9 @@ const GetUserProfileQuery = gql`
   }
 `;
 
+/**
+ * Apollo container
+ */
 const withInfo = graphql(GetUserProfileQuery, {
   name: 'userProfile',
   options: (props) => ({
@@ -229,6 +250,4 @@ const withInfo = graphql(GetUserProfileQuery, {
   })
 });
 
-UserProfileScreen = withInfo(UserProfileScreen);
-
-export default connect()(UserProfileScreen);
+export default connect()(withInfo(UserProfileScreen));
