@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'native-base';
 
+import FollowButton from './FollowButton';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

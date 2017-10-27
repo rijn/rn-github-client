@@ -54,7 +54,8 @@ export const auth = (state = initialAuthState, action) => {
   switch (action.type) {
     case 'Login':
       let user = action.params.user;
-      AsyncStorage.setItem('@githubClient:user', user);
+      AsyncStorage.setItem('@githubClient:user', JSON.stringify(user));
+      console.log(user);
       return { ...state, isLoggedIn: true, user };
     case 'Logout':
       AsyncStorage.removeItem('@githubClient:user');

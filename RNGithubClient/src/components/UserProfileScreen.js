@@ -6,14 +6,15 @@ import { StyleSheet, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Container, Content, Separator, ListItem, Text, Left, Body, Right, Thumbnail,
-  Tab, Tabs, ScrollableTab
+  Tab, Tabs, ScrollableTab, Spinner
 } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid'
-
-import UserList from './UserList';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+
+import UserList from './UserList';
+import FollowButton from './FollowButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +39,11 @@ const styles = StyleSheet.create({
   },
   ceilLeft: {
     borderRightWidth: 0.5
+  },
+  followingButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0
   }
 });
 
@@ -95,7 +101,7 @@ class UserProfileScreen extends React.Component {
     if (error) {
       return <Text>{error.toString()}</Text>;
     } else if (loading) {
-      return <Text>Loading</Text>;
+      return <Spinner color='#00a6de' />;
     } else {
       let { userProfile: { user }, dispatch } = this.props;
 
@@ -141,12 +147,18 @@ class UserProfileScreen extends React.Component {
                   <Thumbnail source={{ uri: user.avatarUrl }} />
                 </Left>
                 <Body>
-                  <Text>{user.name}</Text>
-                  <Text note style={styles.list}>{user.login}</Text>
+                  <View style={{ width: '100%' }}>
+                    <View>
+                      <Text>{user.name}</Text>
+                      <Text note style={styles.list}>{user.login}</Text>
+                    </View>
+                    <View style={styles.followingButton}>
+                      <FollowButton login={user.login}/>
+                    </View>
+                  </View>
                   <Text note style={styles.list}>{user.bio}</Text>
                 </Body>
-                <Right>
-                </Right>
+                <Right />
               </ListItem>
               {Attrs}
             </View>
@@ -245,7 +257,6 @@ const GetUserProfileQuery = gql`
 const withInfo = graphql(GetUserProfileQuery, {
   name: 'userProfile',
   options: (props) => ({
-    pollInterval: 20000,
     variables: props.navigation.state.params.user
   })
 });

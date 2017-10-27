@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, TabNavigator, StackNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Root } from "native-base";
 
 import FeedScreen from '../components/FeedScreen';
 import MeScreen from '../components/MeScreen';
@@ -91,7 +92,9 @@ export const AppNavigator = StackNavigator({
  * Container with navigation
  */
 const AppWithNavigationState = ({ dispatch, nav }) => (
-  <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
+  <Root>
+    <AppNavigator navigation={addNavigationHelpers({ dispatch, state: nav })} />
+  </Root>
 );
 
 AppWithNavigationState.propTypes = {

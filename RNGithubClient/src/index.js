@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
@@ -9,11 +9,6 @@ import AppWithNavigationState from './navigators/AppNavigator';
 import { graphql, ApolloProvider } from 'react-apollo';
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import gql from 'graphql-tag';
-
-/**
- * Github Token
- */
-const TOKEN = '';
 
 const networkInterface = createNetworkInterface({ uri: 'https://api.github.com/graphql' });
 const client = new ApolloClient({ networkInterface });
@@ -27,9 +22,12 @@ networkInterface.use([{
       req.options.headers = {};
     }
 
-    req.options.headers.authorization = `Bearer ${TOKEN}`;
-
-    next();
+    AsyncStorage.getItem('@githubClient:user').then((user) => {
+      if (user) {
+        req.options.headers.authorization = `Bearer ` + JSON.parse(user).token;
+      }
+      next();
+    });
   }
 }]);
 

@@ -6,14 +6,14 @@ import { StyleSheet, View, WebView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Container, Content, Separator, ListItem, Text, Left, Body, Right, Thumbnail,
-  Tab, Tabs, ScrollableTab, Icon
+  Tab, Tabs, ScrollableTab, Icon, Spinner
 } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid'
-
-import UserList from './UserList';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+
+import StarButton from './StarButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +46,11 @@ const styles = StyleSheet.create({
   },
   ceilLeft: {
     borderRightWidth: 0.5
+  },
+  starButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0
   }
 });
 
@@ -117,7 +122,7 @@ class RepositoryProfileScreen extends React.Component {
     if (error) {
       return <Text>{error.toString()}</Text>;
     } else if (loading) {
-      return <Text>Loading</Text>;
+      return <Spinner color='#00a6de' />;
     } else {
 
       let { repositoryProfile: { repository }, dispatch } = this.props;
@@ -160,7 +165,14 @@ class RepositoryProfileScreen extends React.Component {
               <ListItem>
                 <Grid>
                   <Row>
-                    <Text>{repository.nameWithOwner}</Text>
+                    <View style={{ width: '100%' }}>
+                      <View>
+                        <Text style={{ alignSelf: 'flex-start' }}>{repository.nameWithOwner}</Text>
+                      </View>
+                      <View style={styles.starButton}>
+                        <StarButton owner={repository.owner.login} name={repository.name} />
+                      </View>
+                    </View>
                   </Row>
                   <Row>
                     <Text note style={styles.list}>{repository.description}</Text>

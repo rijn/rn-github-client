@@ -3,7 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
-import { Container, Content, Separator, List, ListItem, Text, Left, Body, Right, Thumbnail, Button } from 'native-base';
+import {
+  Container, Content, Separator, List, ListItem, Text, Left, Body, Right,
+  Thumbnail, Button, Spinner
+} from 'native-base';
 
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -57,9 +60,7 @@ class UserList extends React.Component {
     let composed = this.state.composed;
 
     if (!composed) {
-      return (
-        <Text>Loading</Text>
-      );
+      return <Spinner color='#00a6de' />;
     }
 
     let userList = _.chain(composed.user.edges).map(({ node }) => node).value();
@@ -96,8 +97,8 @@ class UserList extends React.Component {
  */
 UserList.propTypes = {
   user: PropTypes.string.isRequired,
-  enableFollowers: PropTypes.bool.isRequired,
-  enableFollowing: PropTypes.bool.isRequired
+  enableFollowers: PropTypes.bool,
+  enableFollowing: PropTypes.bool
 };
 
 /**

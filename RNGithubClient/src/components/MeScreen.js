@@ -83,7 +83,7 @@ MeScreen.propTypes = {
   userInfo: PropTypes.shape({
     loading: PropTypes.bool.isRequired,
     user: PropTypes.object,
-  }).isRequired
+  })
 };
 
 /**
@@ -111,7 +111,7 @@ const withInfo = graphql(GetUserInfoQuery, {
   options: (props) => ({
     pollInterval: 20000,
     variables: {
-      login: props.user
+      login: props.user.login
     }
   })
 });

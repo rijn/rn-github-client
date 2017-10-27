@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
-import { Container, Content, Separator, List, ListItem, Text, Left, Body, Right, Thumbnail, Button } from 'native-base';
+import {
+  Container, Content, Separator, List, ListItem, Text, Left, Body, Right,
+  Thumbnail, Button, Spinner
+} from 'native-base';
 
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -36,7 +39,9 @@ class RepositoryList extends React.Component {
     super(props);
 
     this.state = {
-      composed: null
+      composed: null,
+      refreshing: true,
+      edges: []
     };
   }
 
@@ -46,11 +51,17 @@ class RepositoryList extends React.Component {
    * @param  {Props} newProps
    */
   componentWillReceiveProps(newProps) {
-    if (newProps.loading) return;
+    // this.setState({ refreshing: !!newProps.loading });
+    // if (newProps.loading) return;
 
     let composed = newProps.repos ? newProps.repos : newProps.starredRepos ? newProps.starredRepos : null;
-
-    this.setState({ composed });
+    let edges = _.get(composed, 'repository.edges');
+    if (edges) {
+      this.setState({ composed, edges });
+    }
+    if (this.state.refreshing == true && !!composed) {
+      this.setState({ refreshing: false });
+    }
 
     this.props = newProps;
   }
@@ -76,6 +87,11 @@ class RepositoryList extends React.Component {
     );
   }
 
+  handleRefresh() {
+    this.setState({ edges: [], refreshing: true });
+    this.state.composed.refetch();
+  }
+
   /**
    * Render function
    *
@@ -84,15 +100,9 @@ class RepositoryList extends React.Component {
   render() {
     let { dispatch } = this.props;
 
-    let composed = this.state.composed;
+    let { composed, edges, loading, refreshing } = this.state;
 
-    if (!composed) {
-      return (
-        <Text>Loading</Text>
-      );
-    }
-
-    let repositoryList = _.chain(composed.repository.edges).map(({ node }) => node).value();
+    let repositoryList = _.chain(edges).map(({ node }) => node).value();
 
     return (
       <List scrollEnabled={false} style={styles.container}>
@@ -100,6 +110,8 @@ class RepositoryList extends React.Component {
           data={repositoryList}
           onEndReached={() => { if (!this.props.loading) { return composed.fetchNextPage(); } }}
           keyExtractor={({ id }) => id}
+          refreshing={refreshing}
+          onRefresh={() => { this.handleRefresh(); }}
           renderItem={({
             item: {
               id, name, description, isFork,
@@ -157,7 +169,7 @@ RepositoryList.propTypes = {
 const GetReposQuery = gql`
   query GetRepos($login: String!, $after: String) {
     user(login: $login) {
-      repositories(first: 10, after: $after) {
+      repositories(first: 20, after: $after) {
         edges {
           node {
             id
@@ -293,7 +305,8 @@ const withRepos = graphql(GetReposQuery, {
       repos: {
         repository: data.user.repositories,
         hasNextPage: data.user.repositories.pageInfo.hasNextPage,
-        fetchNextPage
+        fetchNextPage,
+        refetch: data.refetch
       }
     };
   }
@@ -315,7 +328,7 @@ const withStarredRepos = graphql(GetStarredReposQuery, {
   props: ({ starredRepos, ownProps }) => {
     let data = starredRepos;
 
-    if (data.loading) {
+    if (data.loading || !data.user) {
       return { loading: true, fetchNextPage: () => {} };
     }
 
@@ -347,7 +360,8 @@ const withStarredRepos = graphql(GetStarredReposQuery, {
       repos: {
         repository: data.user.starredRepositories,
         hasNextPage: data.user.starredRepositories.pageInfo.hasNextPage,
-        fetchNextPage
+        fetchNextPage,
+        refetch: data.refetch
       }
     };
   }
