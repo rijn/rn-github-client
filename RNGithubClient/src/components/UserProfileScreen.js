@@ -77,7 +77,7 @@ const attrMap = {
  * User Profile Screen
  * @class UserProfileScreen
  */
-class UserProfileScreen extends React.Component {
+export class UserProfileScreen extends React.Component {
   constructor(props) {
     super(props);
 

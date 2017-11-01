@@ -23,7 +23,7 @@ import ErrorToast from './ErrorToast';
 const styles = StyleSheet.create({
 });
 
-class StarButton extends React.Component {
+export class StarButton extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -43,8 +43,6 @@ class StarButton extends React.Component {
     if (!data || data.loading) {
       return <Spinner color='#00a6de' />;
     }
-
-    console.log(data);
 
     let { repository: { viewerHasStarred } } = data;
 

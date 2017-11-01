@@ -78,7 +78,7 @@ const attrMap = {
  * Repository profile screen
  * @class RepositoryProfileScreen
  */
-class RepositoryProfileScreen extends React.Component {
+export class RepositoryProfileScreen extends React.Component {
   constructor(props) {
     super(props);
 

@@ -6,7 +6,7 @@ import { WebView as _WebView } from 'react-native';
  * Web view screen
  * @class WebView
  */
-class WebView extends React.Component {
+export class WebView extends React.Component {
   constructor(props) {
     super(props);
 

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders information correctly 1`] = `
+<ActivityIndicator
+  animating={true}
+  color="#00a6de"
+  hidesWhenStopped={true}
+  size="large"
+  style={
+    Object {
+      "height": 80,
+    }
+  }
+  virtual={undefined}
+/>
+`;
+
+exports[`renders loading correctly 1`] = `
+<ActivityIndicator
+  animating={true}
+  color="#00a6de"
+  hidesWhenStopped={true}
+  size="large"
+  style={
+    Object {
+      "height": 80,
+    }
+  }
+  virtual={undefined}
+/>
+`;

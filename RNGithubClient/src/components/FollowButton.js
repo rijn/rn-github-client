@@ -21,7 +21,7 @@ import ErrorToast from './ErrorToast';
 const styles = StyleSheet.create({
 });
 
-class FollowButton extends React.Component {
+export class FollowButton extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -48,8 +48,6 @@ class FollowButton extends React.Component {
 
   render() {
     let { dispatch, data } = this.props;
-
-    console.log(this.props);
 
     if (!data || data.loading) {
       return <Spinner color='#00a6de' />;

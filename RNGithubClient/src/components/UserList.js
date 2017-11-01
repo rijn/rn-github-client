@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
  * User List Component
  * @class UserList
  */
-class UserList extends React.Component {
+export class UserList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -96,7 +96,7 @@ class UserList extends React.Component {
  * Required user and bool to indicate the data source
  */
 UserList.propTypes = {
-  user: PropTypes.string.isRequired,
+  user: PropTypes.string,
   enableFollowers: PropTypes.bool,
   enableFollowing: PropTypes.bool
 };

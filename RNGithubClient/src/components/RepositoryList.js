@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
  *
  * @class RepositoryList
  */
-class RepositoryList extends React.Component {
+export class RepositoryList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -53,7 +53,7 @@ class RepositoryList extends React.Component {
   componentWillReceiveProps(newProps) {
     // this.setState({ refreshing: !!newProps.loading });
     // if (newProps.loading) return;
-
+    console.log(newProps)
     let composed = newProps.repos ? newProps.repos : newProps.starredRepos ? newProps.starredRepos : null;
     let edges = _.get(composed, 'repository.edges');
     if (edges) {
@@ -158,7 +158,7 @@ class RepositoryList extends React.Component {
  * Required user and switches to control the data source
  */
 RepositoryList.propTypes = {
-  user: PropTypes.string.isRequired,
+  user: PropTypes.string,
   enableRepos: PropTypes.bool,
   enableStarredRepos: PropTypes.bool
 };
