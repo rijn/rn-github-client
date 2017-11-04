@@ -1,5 +1,5 @@
 import base64 from 'base-64';
-import { _fetch, CONFIG, githubPath } from './helper';
+import { _fetch, githubPath } from './helper';
 import { CONFIG } from './config';
 
 export const basicLogin = async (username, pwd, tfaToken) => {

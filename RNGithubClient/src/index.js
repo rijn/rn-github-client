@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppRegistry, AsyncStorage } from 'react-native';
+import { AppRegistry, AsyncStorage, StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 
@@ -52,6 +52,7 @@ export default class App extends React.Component {
    * @return {ReactDOM}
    */
   render() {
+    StatusBar.setBarStyle('light-content', true);
     return (
       <ApolloProvider client={client} store={this.store}>
         <AppWithNavigationState />

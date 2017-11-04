@@ -25,6 +25,7 @@ export const nav = (state = initialNavState, action) => {
     case 'RepositoryProfile':
     case 'UserRSFF':
     case 'WebView':
+    case 'Search':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: action.type, params: action.params }),
         state

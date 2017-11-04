@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'native-base';
-
-import FollowButton from './FollowButton';
+import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base';
+import { SearchBar } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,16 +24,23 @@ class FeedScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      searchText: ''
+    };
   }
 
   render() {
     let { dispatch } = this.props;
+    let { searchText } = this.state;
 
     return (
-      <View style={styles.container}>
-        <Text>Main</Text>
-      </View>
+      <Container>
+        <SearchBar
+          onSubmitEditing={() => { dispatch({ type: 'Search', params: { query: searchText } }); }}
+          onChangeText={(searchText) => { this.setState({ searchText })}}
+          returnKeyType='search'
+          placeholder='Search for any repo / user...' />
+      </Container>
     );
   }
 };

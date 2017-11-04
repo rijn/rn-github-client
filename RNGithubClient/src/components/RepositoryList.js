@@ -53,7 +53,6 @@ export class RepositoryList extends React.Component {
   componentWillReceiveProps(newProps) {
     // this.setState({ refreshing: !!newProps.loading });
     // if (newProps.loading) return;
-    console.log(newProps)
     let composed = newProps.repos ? newProps.repos : newProps.starredRepos ? newProps.starredRepos : null;
     let edges = _.get(composed, 'repository.edges');
     if (edges) {
@@ -255,6 +254,49 @@ const GetStarredReposQuery = gql`
   }
 `;
 
+const SearchReposQuery = gql`
+  query SearchRepos($query: String!, $after: String) {
+    search(query: $query, first: 10, type: REPOSITORY, after: $after) {
+      edges {
+        node {
+          ... on Repository {
+            id
+            name
+            nameWithOwner
+            description
+            updatedAt
+            isFork
+            owner {
+              login
+            }
+            parent {
+              nameWithOwner
+            }
+            stargazers {
+              totalCount
+            }
+            forks {
+              totalCount
+            }
+            primaryLanguage {
+              color
+              name
+            }
+            licenseInfo {
+              nickname
+              name
+            }
+          }
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+`;
+
 /**
  * Apollo Container
  *
@@ -367,4 +409,56 @@ const withStarredRepos = graphql(GetStarredReposQuery, {
   }
 });
 
-export default connect()(withStarredRepos(withRepos(RepositoryList)));
+/**
+ * Apollo container
+ * Same as previous container
+ */
+const withSearchRepos = graphql(SearchReposQuery, {
+  name: 'repos',
+  skip: ({ enableSearchRepos }) => !enableSearchRepos,
+  options: (props) => ({
+    variables: {
+      query: props.query
+    },
+    notifyOnNetworkStatusChange: true
+  }),
+  props: ({ repos, ownProps }) => {
+    let data = repos;
+
+    if (data.loading) {
+      return { loading: true, fetchNextPage: () => {} };
+    }
+
+    if (data.error || !data.search) {
+      console.log(data.error);
+    }
+
+    const fetchNextPage = () => {
+      return data.fetchMore({
+        variables: {
+          after: data.search.pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          return Object.assign({}, previousResult, {
+            search: {
+              __typename: previousResult.search.__typename,
+              edges: [ ...previousResult.search.edges, ...fetchMoreResult.search.edges ],
+              pageInfo: fetchMoreResult.search.pageInfo,
+            }
+          });
+        }
+      });
+    };
+
+    return {
+      repos: {
+        repository: data.search,
+        hasNextPage: data.search.pageInfo.hasNextPage,
+        fetchNextPage,
+        refetch: data.refetch
+      }
+    };
+  }
+});
+
+export default connect()(withSearchRepos(withStarredRepos(withRepos(RepositoryList))));

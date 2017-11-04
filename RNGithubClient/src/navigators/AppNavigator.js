@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Root } from "native-base";
 
 import FeedScreen from '../components/FeedScreen';
-import MeScreen from '../components/MeScreen';
+import NotificationScreen from '../components/NotificationScreen';
 import SettingScreen from '../components/SettingScreen';
 
 import LoginScreen from '../components/LoginScreen';
@@ -14,6 +14,7 @@ import UserProfileScreen from '../components/UserProfileScreen';
 import UserRSFFScreen from '../components/UserRSFFScreen';
 import RepositoryProfileScreen from '../components/RepositoryProfileScreen';
 import WebView from '../components/WebView';
+import SearchScreen from '../components/SearchScreen';
 
 const iconSize = 26;
 
@@ -35,14 +36,14 @@ export const TabNav = TabNavigator({
       ),
     }
   },
-  Me: {
-    screen: MeScreen,
+  Notification: {
+    screen: NotificationScreen,
     navigationOptions: {
-      title: 'Me',
-      tabBarLabel: 'Me',
+      title: 'Notification',
+      tabBarLabel: 'Notification',
       tabBarIcon: ({ tintColor, focused }) => (
         <Ionicons
-          name={focused ? 'ios-person' : 'ios-person-outline'}
+          name={focused ? 'ios-notifications' : 'ios-notifications-outline'}
           size={iconSize}
           style={{ color: tintColor }}
         />
@@ -70,6 +71,10 @@ export const TabNav = TabNavigator({
   tabBarOptions: {
     activeTintColor: '#00a6de',
   },
+  navigationOptions: {
+    headerTintColor: '#fff',
+    headerStyle: { backgroundColor: '#24292e' },
+  }
 });
 
 /**
@@ -83,9 +88,14 @@ export const AppNavigator = StackNavigator({
   UserProfile: { screen: UserProfileScreen },
   RepositoryProfile: { screen: RepositoryProfileScreen },
   UserRSFF: { screen: UserRSFFScreen },
-  WebView: { screen: WebView }
+  WebView: { screen: WebView },
+  Search: { screen: SearchScreen }
 }, {
-  'header': null
+  'header': null,
+  navigationOptions: {
+    headerTintColor: '#fff',
+    headerStyle: { backgroundColor: '#24292e' },
+  }
 });
 
 /**

@@ -36,6 +36,7 @@ export class UserList extends React.Component {
    */
   componentWillReceiveProps(newProps) {
     if (newProps.loading) return;
+    console.log(newProps);
 
     let composed = newProps.followers && this.props.following ? {
       user: {
@@ -151,6 +152,34 @@ const GetFollowingQuery = gql`
   }
 `;
 
+const SearchUsersQuery = gql`
+  query SearchUsers($query: String!, $after: String) {
+    search(query: $query, first: 10, type: USER, after: $after) {
+      edges {
+        node {
+          __typename
+          ... on User {
+            id
+            login
+            name
+            bio
+            avatarUrl
+          }
+          ... on Organization {
+            id
+            login
+            name
+          }
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+`;
+
 /**
  * Apollo container
  * Will fetch data from data source and return a function which can pull the next page data that
@@ -260,4 +289,52 @@ const withFollowing = graphql(GetFollowingQuery, {
   }
 });
 
-export default connect()(withFollowing(withFollowers(UserList)));
+const withSearchUsers = graphql(SearchUsersQuery, {
+  name: 'users',
+  skip: ({ enableSearchUsers }) => !enableSearchUsers,
+  options: (props) => ({
+    variables: {
+      query: props.query
+    },
+    notifyOnNetworkStatusChange: true
+  }),
+  props: ({ users, ownProps }) => {
+    let data = users;
+
+    if (data.loading) {
+      return { loading: true, fetchNextPage: () => {} };
+    }
+
+    if (data.error || !data.search) {
+      console.log(data.error);
+    }
+
+    const fetchNextPage = () => {
+      return data.fetchMore({
+        variables: {
+          after: data.search.pageInfo.endCursor,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          return Object.assign({}, previousResult, {
+            search: {
+              __typename: previousResult.search.__typename,
+              edges: [ ...previousResult.search.edges, ...fetchMoreResult.search.edges ],
+              pageInfo: fetchMoreResult.search.pageInfo,
+            }
+          });
+        }
+      });
+    };
+
+    return {
+      followers: {
+        user: data.search,
+        hasNextPage: data.search.pageInfo.hasNextPage,
+        fetchNextPage,
+        refetch: data.refetch
+      }
+    };
+  }
+});
+
+export default connect()(withSearchUsers(withFollowing(withFollowers(UserList))));
